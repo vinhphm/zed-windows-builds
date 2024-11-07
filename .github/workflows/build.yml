@@ -28,10 +28,10 @@ jobs:
           repository: zed-industries/zed
           ref: main
 
-      - name: Install rust nightly
+      - name: Install rust stable
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           override: true
           target: wasm32-wasi
 
