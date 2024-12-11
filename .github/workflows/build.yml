@@ -22,11 +22,18 @@ jobs:
           New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
             -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
 
+      - name: Fetch latest pre-release tag
+        id: get-latest-tag
+        run: |
+          LATEST_PRE_TAG=$(git ls-remote --tags --sort=-v:refname https://github.com/zed-industries/zed.git | grep -E 'v[0-9]+\.[0-9]+\.[0-9]+-pre' | head -n 1 | cut -f2)
+          echo "Latest pre-release tag: $LATEST_PRE_TAG"
+          echo "tag=$LATEST_PRE_TAG" >> $GITHUB_OUTPUT
+      
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           repository: zed-industries/zed
-          ref: main
+          ref: ${{ steps.get-latest-tag.outputs.tag }}
 
       - name: Install rust stable
         uses: actions-rs/toolchain@v1
